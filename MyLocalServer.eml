@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/web/WEB-INF/classes"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="lib" scope="COMPILE">
+		<relative-module-cls project-related="file://$PROJECT_DIR$/web/WEB-INF/lib"/>
+	</lib>
+	<levels>
+		<level name="Tomcat 7.0.106" value="application_server_libraries"/>
+		<level name="sqlite-jdbc-3.32.3.2" value="project"/>
+		<level name="gson-2.8.6" value="project"/>
+	</levels>
+</component>
