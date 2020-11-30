@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
@@ -112,14 +113,16 @@ public class SyncUserDataServlet extends HttpServlet {
 				}
 				//记录更新的数据条数
 				int count = 0;
-				
-				
-				for (int i = 0; i < userList.size(); i++) {
-					CSOption.insert(userList.get(i));
+				//去重
+				List<UserDataEntity> noRepeatuserList = noRepeatList(userList);
+				for (int i = 0; i < noRepeatuserList.size(); i++) {
+					CSOption.insert(noRepeatuserList.get(i));
 					count++;
 				}
+				//去重
+				List<UserDataEntity> noRepeatsameUserList = noRepeatList(sameUserList);
 				//对比数据是否有更改
-				for (int i = 0; i < sameUserList.size(); i++) {
+				for (int i = 0; i < noRepeatsameUserList.size(); i++) {
 					String carSerialNumber = sameUserList.get(i).getCarSerialNumber();
 					String carnumber = sameUserList.get(i).getCarNumber();
 					String username = sameUserList.get(i).getUserName();
@@ -154,7 +157,7 @@ public class SyncUserDataServlet extends HttpServlet {
 								jqRebate!=allUserData.get(j).getJqRebate()|//交强险点数不相同
 								syPrice!=allUserData.get(j).getSyPrice()||//商业险保费不相同
 								syRebate!=allUserData.get(j).getSyRebate()) {//商业险点数不相同
-								CSOption.update(sameUserList.get(i));//更新用户信息
+								CSOption.update(noRepeatsameUserList.get(i));//更新用户信息
 								count++;
 								System.out.println("比较的次数："+count);
 							}
@@ -178,6 +181,21 @@ public class SyncUserDataServlet extends HttpServlet {
 				writer.println(allUsesJson); 
 //				writer.println(URLEncoder.encode(allUsesJson, "utf-8"));
 			}
+			
+			
 		}
+		
 	}
+	 /**
+     * list集合去重复数据
+     *
+     * @param list 要去重复的集合
+     * @return 去重复之后的集合
+     */
+    public List<UserDataEntity> noRepeatList(List<UserDataEntity> list) {
+        HashSet<UserDataEntity> hashSet = new HashSet<>(list);
+        list.clear();
+        list.addAll(hashSet);
+        return list;
+    }
 }
